@@ -30,7 +30,7 @@ client.getPlayer('PxlPanda', (err, player) => {
 
 ## Notes
 
-When providing UUIDs make sure to remove dashes.
+When querying data by player UUIDs make sure to remove dashes.
 
 ## Examples
 #### Create a Client instance
