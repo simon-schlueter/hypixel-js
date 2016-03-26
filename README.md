@@ -28,6 +28,9 @@ client.getPlayer('PxlPanda', (err, player) => {
 
 `npm install hypixel`
 
+## Notes
+
+When providing UUIDs make sure to remove dashes.
 
 ## Examples
 #### Create a Client instance
