@@ -8,7 +8,7 @@ const Hypixel = require('hypixel');
 const client = new Hypixel({ key: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' });
 
 // old school callbacks
-client.getPlayer('PxlPanda', (err, player) => {
+client.getPlayerByUsername('PxlPanda', (err, player) => {
   if (err) {
     return console.info('Nope!');
   }
