@@ -16,10 +16,10 @@ client.getPlayerByUsername('PxlPanda', (err, player) => {
   // or a Promise if no callback provided
   client.findGuildByPlayer(player._id)
      .then((guildId) => {
-        
+        ...
      })
      .catch((err) => {
-      
+        ...
      });
 });
 ```
