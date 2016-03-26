@@ -1,0 +1,26 @@
+{
+  "name": "hypixel",
+  "version": "1.0.0",
+  "description": "A node client library for the Hypixel API",
+  "main": "index.js",
+  "author": "CdePanda",
+  "license": "MIT",
+  "dependencies": {
+    "request": "^2.69.0"
+  },
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/CdePanda/hypixel-js.git"
+  },
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "eslint": "^2.5.1",
+    "eslint-config-airbnb": "^6.2.0",
+    "eslint-plugin-react": "^4.2.3"
+  }
+}
