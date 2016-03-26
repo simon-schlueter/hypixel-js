@@ -2,6 +2,8 @@
 
 This is a client library for the public Hypixel API.
 
+[![NPM](https://nodei.co/npm/hypixel.png?mini=true)](https://nodei.co/npm/hypixel/)
+
 ```javascript
 const Hypixel = require('hypixel');
 
