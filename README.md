@@ -26,5 +26,5 @@ client.getPlayer('PxlPanda', (err, player) => {
 
 ## Installation
 
-`npm install twitter`
+`npm install hypixel`
 
