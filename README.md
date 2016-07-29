@@ -73,7 +73,7 @@ client.getSession(playerUuidOrUsername, (err, sessionId) => { ... });
 ```
 #### Get Player Info
 ```javascript
-client.getPlayer(playerUuid (err, player) => { ... });
+client.getPlayer(playerUuid, (err, player) => { ... });
 ```
 #### Get Player Info (by username)
 ```javascript
