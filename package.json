@@ -6,7 +6,7 @@
   "author": "CdePanda",
   "license": "MIT",
   "dependencies": {
-    "request": "^2.69.0"
+    "phin": "^2.3.11"
   },
   "engines": {
     "node": ">=4.0.0"
