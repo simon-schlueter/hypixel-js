@@ -77,5 +77,5 @@ client.getPlayer(playerUuid, (err, player) => { ... });
 ```
 #### Get Player Info (by username)
 ```javascript
-client.getPlayer(username, (err, player) => { ... });
+client.getPlayerByUsername(username, (err, player) => { ... });
 ```
