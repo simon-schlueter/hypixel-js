@@ -1,19 +1,16 @@
-'use strict';
-var request = require('request');
-var querystring = require('querystring');
-var API_HOST = 'https://api.hypixel.net';
-var Client = /** @class */ (function () {
+declare const request: any;
+declare const querystring: any;
+declare const API_HOST = "https://api.hypixel.net";
+declare class Client {
+    key: string;
     /**
      * Constructs a new Client instance
      *
      * @param {object} options - an object containing options, currently only the key
      */
-    function Client(options) {
-        if (!options.key) {
-            throw new Error('Hypixel API key not provided.');
-        }
-        this.key = options.key;
-    }
+    constructor(options: {
+        key: string;
+    });
     /**
      * Returns the full request path for a combination of path and query options
      *
@@ -22,13 +19,7 @@ var Client = /** @class */ (function () {
      * @returns {string} the request url
      * @private
      */
-    Client.prototype._buildPath = function (path, query) {
-        var params = query || null;
-        var _query = querystring.stringify(Object.assign({}, params, {
-            key: this.key,
-        }));
-        return API_HOST + "/" + path + "?" + _query;
-    };
+    _buildPath(path: string, query: object | null): string;
     /**
      * Sends a request to the API
      *
@@ -38,26 +29,7 @@ var Client = /** @class */ (function () {
      * @param {function} callback - The callback function
      * @private
      */
-    Client.prototype._sendRequest = function (path, query, resultField, callback) {
-        request(this._buildPath(path, query), function (error, res, body) {
-            var data = null;
-            if (!error) {
-                try {
-                    data = JSON.parse(body);
-                }
-                catch (ex) {
-                    return callback(new Error('malformed json'), null);
-                }
-            }
-            if (data) {
-                if (data.success) {
-                    return callback(error, resultField ? data[resultField] : data);
-                }
-                return callback(new Error(data.cause), null);
-            }
-            return callback(error, data);
-        });
-    };
+    _sendRequest<T>(path: string, query: object | null, resultField: string, callback: (error: Error, data: T | null) => void): void;
     /**
      * Sends a request to the API and creates and returns a Promise if no callback is provided
      *
@@ -68,31 +40,14 @@ var Client = /** @class */ (function () {
      * @returns {Promise|undefined} - undefined if callback defined, Promise if no callback
      * @private
      */
-    Client.prototype._request = function (path, query, resultField, callback) {
-        var _this = this;
-        if (callback) {
-            return this._sendRequest(path, query, resultField, callback);
-        }
-        return new Promise(function (resolve, reject) {
-            _this._sendRequest(path, query, resultField, function (error, data) {
-                if (error) {
-                    reject(error);
-                }
-                else {
-                    resolve(data);
-                }
-            });
-        });
-    };
+    _request<T>(path: string, query: object | null, resultField: string, callback: (error: Error, data: object | null) => void): Promise<T> | void;
     /**
      * Retrieves information about the provided API key
      *
      * @param {function} callback - The callback function, if not provided {Promise} is returned
      * @returns {Promise|undefined} - undefined if callback defined, Promise if no callback
      */
-    Client.prototype.getKeyInfo = function (callback) {
-        return this._request('key', null, 'record', callback);
-    };
+    getKeyInfo<T>(callback: (error: Error, data: object | null) => void): Promise<T> | void;
     /**
      * Finds the id of a guild
      *
@@ -102,10 +57,7 @@ var Client = /** @class */ (function () {
      * @returns {Promise|undefined} - undefined if callback defined, Promise if no callback
      * @private
      */
-    Client.prototype._findGuild = function (field, value, callback) {
-        var _a;
-        return this._request('findGuild', (_a = {}, _a[field] = value, _a), 'guild', callback);
-    };
+    _findGuild<T>(field: string, value: string, callback: (error: Error, data: object | null) => void): Promise<T> | void;
     /**
      * Finds the id of a guild by the guild name
      *
@@ -113,9 +65,7 @@ var Client = /** @class */ (function () {
      * @param {function} callback - The callback function, if not provided {Promise} is returned
      * @returns {Promise|undefined} - undefined if callback defined, Promise if no callback
      */
-    Client.prototype.findGuildByName = function (name, callback) {
-        return this._findGuild('byName', name, callback);
-    };
+    findGuildByName<T>(name: string, callback: (error: Error, data: object | null) => void): Promise<T> | void;
     /**
      * Finds the id of a guild a player is in
      *
@@ -123,9 +73,7 @@ var Client = /** @class */ (function () {
      * @param {function} callback - The callback function, if not provided {Promise} is returned
      * @returns {Promise|undefined} - undefined if callback defined, Promise if no callback
      */
-    Client.prototype.findGuildByPlayer = function (player, callback) {
-        return this._findGuild('byUuid', player, callback);
-    };
+    findGuildByPlayer<T>(player: string, callback: (error: Error, data: object | null) => void): Promise<T> | void;
     /**
      * Gets a guild by the guild id
      *
@@ -133,18 +81,14 @@ var Client = /** @class */ (function () {
      * @param {function} callback - The callback function, if not provided {Promise} is returned
      * @returns {Promise|undefined} - undefined if callback defined, Promise if no callback
      */
-    Client.prototype.getGuild = function (id, callback) {
-        return this._request('guild', { id: id }, 'guild', callback);
-    };
+    getGuild<T>(id: string, callback: (error: Error, data: object | null) => void): Promise<T> | void;
     /**
      * Gets all active boosters
      *
      * @param {function} callback - The callback function, if not provided {Promise} is returned
      * @returns {Promise|undefined} - undefined if callback defined, Promise if no callback
      */
-    Client.prototype.getBoosters = function (callback) {
-        return this._request('boosters', null, 'boosters', callback);
-    };
+    getBoosters<T>(callback: (error: Error, data: object | null) => void): Promise<T> | void;
     /**
      * Gets the friend ids of a player
      *
@@ -152,9 +96,7 @@ var Client = /** @class */ (function () {
      * @param {function} callback - The callback function, if not provided {Promise} is returned
      * @returns {Promise|undefined} - undefined if callback defined, Promise if no callback
      */
-    Client.prototype.getFriends = function (player, callback) {
-        return this._request('friends', { player: player }, 'records', callback);
-    };
+    getFriends<T>(player: string, callback: (error: Error, data: object | null) => void): Promise<T> | void;
     /**
      * Gets a players session
      *
@@ -162,9 +104,7 @@ var Client = /** @class */ (function () {
      * @param {function} callback - The callback function, if not provided {Promise} is returned
      * @returns {Promise|undefined} - undefined if callback defined, Promise if no callback
      */
-    Client.prototype.getSession = function (player, callback) {
-        return this._request('session', { uuid: player }, 'session', callback);
-    };
+    getSession<T>(player: string, callback: (error: Error, data: object | null) => void): Promise<T> | void;
     /**
      * Gets a player
      *
@@ -174,10 +114,7 @@ var Client = /** @class */ (function () {
      * @returns {Promise|undefined} - undefined if callback defined, Promise if no callback
      * @private
      */
-    Client.prototype._getPlayer = function (field, value, callback) {
-        var _a;
-        return this._request('player', (_a = {}, _a[field] = value, _a), 'player', callback);
-    };
+    _getPlayer<T>(field: string, value: string, callback: (error: Error, data: object | null) => void): Promise<T> | void;
     /**
      * Gets a player
      *
@@ -185,9 +122,7 @@ var Client = /** @class */ (function () {
      * @param {function} callback - The callback function, if not provided {Promise} is returned
      * @returns {Promise|undefined} - undefined if callback defined, Promise if no callback
      */
-    Client.prototype.getPlayer = function (id, callback) {
-        return this._getPlayer('uuid', id, callback);
-    };
+    getPlayer<T>(id: string, callback: (error: Error, data: object | null) => void): Promise<T> | void;
     /**
      * Gets a player by their username
      *
@@ -195,9 +130,5 @@ var Client = /** @class */ (function () {
      * @param {function} callback - The callback function, if not provided {Promise} is returned
      * @returns {Promise|undefined} - undefined if callback defined, Promise if no callback
      */
-    Client.prototype.getPlayerByUsername = function (username, callback) {
-        return this._getPlayer('name', username, callback);
-    };
-    return Client;
-}());
-module.exports = Client;
+    getPlayerByUsername<T>(username: string, callback: (error: Error, data: object | null) => void): Promise<T> | void;
+}
