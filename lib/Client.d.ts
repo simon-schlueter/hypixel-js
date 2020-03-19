@@ -1,27 +1,16 @@
-'use strict';
-
-const request = require('request');
-const querystring = require('querystring');
-
-const API_HOST = 'https://api.hypixel.net';
-
-class Client {
-
+declare const request: any;
+declare const querystring: any;
+declare const API_HOST = "https://api.hypixel.net";
+declare class Client {
     key: string;
-
     /**
      * Constructs a new Client instance
      *
      * @param {object} options - an object containing options, currently only the key
      */
-    constructor(options: {key: string}) {
-        if (!options.key) {
-            throw new Error('Hypixel API key not provided.');
-        }
-
-        this.key = options.key;
-    }
-
+    constructor(options: {
+        key: string;
+    });
     /**
      * Returns the full request path for a combination of path and query options
      *
@@ -30,16 +19,7 @@ class Client {
      * @returns {string} the request url
      * @private
      */
-    _buildPath(path: string, query: object): string {
-        const params = query || null;
-
-        const _query = querystring.stringify(Object.assign({}, params, {
-            key: this.key,
-        }));
-
-        return `${API_HOST}/${path}?${_query}`;
-    }
-
+    _buildPath(path: string, query: object | null): string;
     /**
      * Sends a request to the API
      *
@@ -49,30 +29,7 @@ class Client {
      * @param {function} callback - The callback function
      * @private
      */
-    _sendRequest<T>(path: string, query: object, resultField: string, callback: (error: Error, data: T) => void): void {
-        request(this._buildPath(path, query), (error, res, body) => {
-            let data = null;
-
-            if (!error) {
-                try {
-                    data = JSON.parse(body);
-                } catch (ex) {
-                    return callback(new Error('malformed json'), null);
-                }
-            }
-
-            if (data) {
-                if (data.success) {
-                    return callback(error, resultField ? data[resultField] : data);
-                }
-
-                return callback(new Error(data.cause), null);
-            }
-
-            return callback(error, data);
-        });
-    }
-
+    _sendRequest<T>(path: string, query: object | null, resultField: string, callback: (error: Error, data: T | null) => void): void;
     /**
      * Sends a request to the API and creates and returns a Promise if no callback is provided
      *
@@ -83,32 +40,14 @@ class Client {
      * @returns {Promise|undefined} - undefined if callback defined, Promise if no callback
      * @private
      */
-    _request<T>(path: string, query: object, resultField: string, callback: (error: Error, data: object) => void): Promise<T> | void {
-        if (callback) {
-            return this._sendRequest(path, query, resultField, callback);
-        }
-
-        return new Promise<T>((resolve, reject) => {
-            this._sendRequest(path, query, resultField, (error, data) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(data as T);
-                }
-            });
-        });
-    }
-
+    _request<T>(path: string, query: object | null, resultField: string, callback: (error: Error, data: object | null) => void): Promise<T> | void;
     /**
      * Retrieves information about the provided API key
      *
      * @param {function} callback - The callback function, if not provided {Promise} is returned
      * @returns {Promise|undefined} - undefined if callback defined, Promise if no callback
      */
-    getKeyInfo<T>(callback: (error: Error, data: object) => void): Promise<T> | void {
-        return this._request('key', null, 'record', callback);
-    }
-
+    getKeyInfo<T>(callback: (error: Error, data: object | null) => void): Promise<T> | void;
     /**
      * Finds the id of a guild
      *
@@ -118,10 +57,7 @@ class Client {
      * @returns {Promise|undefined} - undefined if callback defined, Promise if no callback
      * @private
      */
-    _findGuild<T>(field: string, value: string, callback: (error: Error, data: object) => void): Promise<T> | void {
-        return this._request('findGuild', { [field]: value }, 'guild', callback);
-    }
-
+    _findGuild<T>(field: string, value: string, callback: (error: Error, data: object | null) => void): Promise<T> | void;
     /**
      * Finds the id of a guild by the guild name
      *
@@ -129,10 +65,7 @@ class Client {
      * @param {function} callback - The callback function, if not provided {Promise} is returned
      * @returns {Promise|undefined} - undefined if callback defined, Promise if no callback
      */
-    findGuildByName<T>(name: string, callback: (error: Error, data: object) => void) : Promise<T> | void {
-        return this._findGuild('byName', name, callback);
-    }
-
+    findGuildByName<T>(name: string, callback: (error: Error, data: object | null) => void): Promise<T> | void;
     /**
      * Finds the id of a guild a player is in
      *
@@ -140,10 +73,7 @@ class Client {
      * @param {function} callback - The callback function, if not provided {Promise} is returned
      * @returns {Promise|undefined} - undefined if callback defined, Promise if no callback
      */
-    findGuildByPlayer<T>(player: string, callback: (error: Error, data: object) => void): Promise<T> | void {
-        return this._findGuild('byUuid', player, callback);
-    }
-
+    findGuildByPlayer<T>(player: string, callback: (error: Error, data: object | null) => void): Promise<T> | void;
     /**
      * Gets a guild by the guild id
      *
@@ -151,20 +81,14 @@ class Client {
      * @param {function} callback - The callback function, if not provided {Promise} is returned
      * @returns {Promise|undefined} - undefined if callback defined, Promise if no callback
      */
-    getGuild<T>(id: string, callback: (error: Error, data: object) => void): Promise<T> | void {
-        return this._request('guild', { id }, 'guild', callback);
-    }
-
+    getGuild<T>(id: string, callback: (error: Error, data: object | null) => void): Promise<T> | void;
     /**
      * Gets all active boosters
      *
      * @param {function} callback - The callback function, if not provided {Promise} is returned
      * @returns {Promise|undefined} - undefined if callback defined, Promise if no callback
      */
-    getBoosters<T>(callback: (error: Error, data: object) => void): Promise<T> | void {
-        return this._request('boosters', null, 'boosters', callback);
-    }
-
+    getBoosters<T>(callback: (error: Error, data: object | null) => void): Promise<T> | void;
     /**
      * Gets the friend ids of a player
      *
@@ -172,10 +96,7 @@ class Client {
      * @param {function} callback - The callback function, if not provided {Promise} is returned
      * @returns {Promise|undefined} - undefined if callback defined, Promise if no callback
      */
-    getFriends<T>(player: string, callback: (error: Error, data: object) => void): Promise<T> | void {
-        return this._request('friends', { player }, 'records', callback);
-    }
-
+    getFriends<T>(player: string, callback: (error: Error, data: object | null) => void): Promise<T> | void;
     /**
      * Gets a players session
      *
@@ -183,10 +104,7 @@ class Client {
      * @param {function} callback - The callback function, if not provided {Promise} is returned
      * @returns {Promise|undefined} - undefined if callback defined, Promise if no callback
      */
-    getSession<T>(player: string, callback: (error: Error, data: object) => void): Promise<T> | void {
-        return this._request('session', { uuid: player }, 'session', callback);
-    }
-
+    getSession<T>(player: string, callback: (error: Error, data: object | null) => void): Promise<T> | void;
     /**
      * Gets a player
      *
@@ -196,10 +114,7 @@ class Client {
      * @returns {Promise|undefined} - undefined if callback defined, Promise if no callback
      * @private
      */
-    _getPlayer<T>(field: string, value: string, callback: (error: Error, data: object) => void): Promise<T> | void {
-        return this._request('player', { [field]: value }, 'player', callback);
-    }
-
+    _getPlayer<T>(field: string, value: string, callback: (error: Error, data: object | null) => void): Promise<T> | void;
     /**
      * Gets a player
      *
@@ -207,10 +122,7 @@ class Client {
      * @param {function} callback - The callback function, if not provided {Promise} is returned
      * @returns {Promise|undefined} - undefined if callback defined, Promise if no callback
      */
-    getPlayer<T>(id: string, callback: (error: Error, data: object) => void): Promise<T> | void {
-        return this._getPlayer('uuid', id, callback);
-    }
-
+    getPlayer<T>(id: string, callback: (error: Error, data: object | null) => void): Promise<T> | void;
     /**
      * Gets a player by their username
      *
@@ -218,9 +130,5 @@ class Client {
      * @param {function} callback - The callback function, if not provided {Promise} is returned
      * @returns {Promise|undefined} - undefined if callback defined, Promise if no callback
      */
-    getPlayerByUsername<T>(username: string, callback: (error: Error, data: object) => void): Promise<T> | void {
-        return this._getPlayer('name', username, callback);
-    }
+    getPlayerByUsername<T>(username: string, callback: (error: Error, data: object | null) => void): Promise<T> | void;
 }
-
-module.exports = Client;
